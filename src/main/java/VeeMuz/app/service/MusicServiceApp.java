@@ -1,8 +1,10 @@
 package VeeMuz.app.service;
 
+import VeeMuz.app.data.model.Artist;
 import VeeMuz.app.data.model.Music;
 import VeeMuz.app.data.model.Playlist;
 import VeeMuz.app.data.model.User;
+import VeeMuz.app.data.repository.ArtistRepository;
 import VeeMuz.app.data.repository.MusicRepository;
 import VeeMuz.app.data.repository.PlaylistRepository;
 import VeeMuz.app.dtos.request.CreatePlaylistRequest;
@@ -26,6 +28,7 @@ public class MusicServiceApp implements MusicService{
 
     private final PlaylistRepository playlistRepository;
     private final MusicRepository musicRepository;
+    private final ArtistRepository artistRepository;
     private UserServiceApp userService;
     private final ModelMapper modelMapper;
 
@@ -75,6 +78,22 @@ public class MusicServiceApp implements MusicService{
 
     @Override
     public SearchArtistResponse searchArtist(SearchArtistRequest request) throws MusicException {
-        return null;
+        validateName(request.getName());
+        Artist artist = findArtist(request.getName());
+
+        SearchArtistResponse response = new SearchArtistResponse();
+        response.setArtist(artist);
+        return response;
+    }
+
+    private Artist findArtist(String name) {
+        Optional<Artist> optionalArtist = artistRepository.findArtistByName(name);
+
+        if (optionalArtist.isEmpty()){
+            throw new MusicException("Artist not found");
+        }
+
+        return optionalArtist.get();
+
     }
 }
