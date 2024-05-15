@@ -45,4 +45,12 @@ public class UserServiceApp implements UserService{
         User user = userRepository.findUserByEmailAddress(email);
         return user != null;
     }
+
+    public User findUserBy(Long userId) throws MusicException {
+        return userRepository.findById(userId).orElseThrow(()->new MusicException("user not found"));
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
 }

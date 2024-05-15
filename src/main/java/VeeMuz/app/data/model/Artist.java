@@ -15,7 +15,7 @@ public class Artist {
     private Long id;
     private String name;
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Song> songs;
+    private List<Music> music;
     private String bio;
 
 }

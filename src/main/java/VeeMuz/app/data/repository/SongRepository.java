@@ -1,7 +1,7 @@
 package VeeMuz.app.data.repository;
 
-import VeeMuz.app.data.model.Song;
+import VeeMuz.app.data.model.Music;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SongRepository extends JpaRepository<Song, Long> {
+public interface SongRepository extends JpaRepository<Music, Long> {
 }
