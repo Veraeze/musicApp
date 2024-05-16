@@ -7,9 +7,8 @@ import VeeMuz.app.data.model.User;
 import VeeMuz.app.data.repository.ArtistRepository;
 import VeeMuz.app.data.repository.MusicRepository;
 import VeeMuz.app.data.repository.PlaylistRepository;
-import VeeMuz.app.dtos.request.CreatePlaylistRequest;
-import VeeMuz.app.dtos.request.SearchArtistRequest;
-import VeeMuz.app.dtos.request.SearchMusicRequest;
+import VeeMuz.app.dtos.request.*;
+import VeeMuz.app.dtos.response.AddSongResponse;
 import VeeMuz.app.dtos.response.CreatePlaylistResponse;
 import VeeMuz.app.dtos.response.SearchArtistResponse;
 import VeeMuz.app.dtos.response.SearchMusicResponse;
@@ -18,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static VeeMuz.app.service.validate.ValidateUser.validateName;
@@ -65,16 +65,7 @@ public class MusicServiceApp implements MusicService{
         return response;
     }
 
-    private Music findMusic(String name) {
-        Optional<Music> optionalMusic = musicRepository.findMusicByName(name);
 
-        if (optionalMusic.isEmpty()){
-            throw new MusicException("Music not found");
-        }
-
-        return optionalMusic.get();
-
-    }
 
     @Override
     public SearchArtistResponse searchArtist(SearchArtistRequest request) throws MusicException {
@@ -86,6 +77,26 @@ public class MusicServiceApp implements MusicService{
         return response;
     }
 
+    @Override
+    public AddSongResponse addSongToPlaylist(AddSongRequest request) {
+        validateName(request.getMusicName());
+        validateName(request.getPlaylistName());
+
+        List<Music> music = musicRepository.findMusicByName(request.getMusicName());
+        Optional<Playlist> playlist = playlistRepository.findPlaylistByName(request.getPlaylistName());
+        if (playlist.isEmpty()){
+            throw new MusicException("Playlist not found");
+        }
+        playlist.get().setMusic(music);
+
+
+    }
+
+    @Override
+    public void removeSongFromPlaylist(RemoveSongRequest request) {
+
+    }
+
     private Artist findArtist(String name) {
         Optional<Artist> optionalArtist = artistRepository.findArtistByName(name);
 
@@ -94,6 +105,16 @@ public class MusicServiceApp implements MusicService{
         }
 
         return optionalArtist.get();
+
+    }
+    private Music findMusic(String name) {
+        Optional<Music> optionalMusic = musicRepository.findMusicByName(name);
+
+        if (optionalMusic.isEmpty()){
+            throw new MusicException("Music not found");
+        }
+
+        return optionalMusic.get();
 
     }
 }

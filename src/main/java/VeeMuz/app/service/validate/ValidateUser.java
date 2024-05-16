@@ -5,10 +5,7 @@ import VeeMuz.app.exception.MusicException;
 public class ValidateUser {
     public static void validateName(String name) throws MusicException {
         if (name == null || name.trim().isEmpty()) {
-            throw new MusicException("{\"error\": \"username field cannot be empty\"}");
-        }
-        if (name.length() > 100) {
-            throw new MusicException("name must not exceed 100 number of characters");
+            throw new MusicException("{\"error\": \"name field cannot be empty\"}");
         }
     }
 
